@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: "Bronze layer containing raw Spotify streaming events"
+    database: SPOTIFY_DB
+    schema: BRONZE
+    tables:
+      - name: spotify_events_bronze
+        description: "Raw Spotify streaming events from Kafka"

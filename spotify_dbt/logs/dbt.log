@@ -1,0 +1,48 @@
+==================== 2025-12-17T14:45:37.053343Z | 019b2cc6-1271-7201-99b1-3b682b744182 ====================
+Installing dbt project and profile setup
+14:45:37.165967 [info ]: Info Created .vscode/extensions.json with dbt extension recommendation
+14:45:37.172294 [info ]: Success Project created successfully!
+14:45:37.172831 [info ]: Info Project name: jaffle_shop
+14:45:37.173222 [info ]: Info Project directory: jaffle_shop
+14:45:37.173863 [info ]: Info Setting up your profile...
+14:45:37.230329 [info ]: Info Creating new profile...
+14:46:13.059311 [info ]: No dbt_cloud.yml found - proceeding without cloud pre-population
+==================== 2025-12-17T14:49:23.008214Z | 019b2cc9-853a-7342-ba3b-bb02e9690e9f ====================
+Installing dbt project and profile setup
+14:49:23.016766 [info ]: Warning Directory 'jaffle_shop' already exists, using 'jaffle_shop_1' instead
+14:49:23.076478 [info ]: Info Created .vscode/extensions.json with dbt extension recommendation
+14:49:23.077235 [info ]: Success Project created successfully!
+14:49:23.077582 [info ]: Info Project name: jaffle_shop_1
+14:49:23.077997 [info ]: Info Project directory: jaffle_shop_1
+14:49:23.078327 [info ]: Info Setting up your profile...
+14:49:23.080557 [info ]: Info Creating new profile...
+14:49:35.960896 [info ]: No dbt_cloud.yml found - proceeding without cloud pre-population
+14:52:42.742966 [info ]: Success Profile written to C:\Users\Konstant\.dbt\profiles.yml
+14:52:42.743537 [info ]: Validating profile inputs, adapters, and connection
+
+dbt-fusion 2.0.0-preview.83
+14:52:42.745702 [info ]: Started loading project
+   Loading ~/.dbt/profiles.yml
+14:52:42.777871 [info ]: Finished loading project [  0.03s]
+14:52:42.779253 [info ]: Started debugging
+14:52:42.779901 [info ]: Debugging profile: dev
+14:52:42.780520 [info ]: Debugging dbt version: 2.0.0-preview.83
+14:52:42.786643 [info ]: Debugging platform: windows x86_64 (windows)
+14:52:42.787582 [info ]: Debugging adapter type: snowflake (remote)
+14:52:42.918444 [info ]: Debugging dependencies:
+  git: OK
+14:52:42.919641 [info ]: Debugging connection:
+  "account": "nw12771.uk-south.azure",
+  "user": "KONSTANTGK",
+  "database": "SPOTIFY_DB",
+  "warehouse": "COMPUTE_WH",
+  "schema": "BRONZE"
+14:52:45.365425 [debug]: Query executed on node unknown:
+select 1 as id
+14:52:45.449732 [info ]: Debugging connection test: OK
+14:52:45.452017 [info ]: Debugged All checks passed!
+14:52:45.453256 [info ]: Finished debugging [  2.67s]
+New version available 2.0.0-preview.86 (run `dbt system update`)
+14:52:45.668265 [info ]: 
+==================== Execution Summary =====================
+Finished 'init' successfully for target 'dev' [3m 23s]
