@@ -1,6 +1,6 @@
 # Spotify Streaming Data Engineering Pipeline
 
-A comprehensive end-to-end data engineering project that simulates, processes, and analyzes Spotify streaming events using modern data engineering tools and best practices. This project demonstrates the complete data lifecycle from real-time event generation to business intelligence dashboards.
+A comprehensive end-to-end data engineering project that simulates, processes, and analyzes Spotify streaming events using modern data engineering tools and best practices. This project demonstrates the complete data lifecycle from real-time event generation to business intelligence dashboard.
 
 ## Project Overview
 
