@@ -1,131 +1,344 @@
-# Spotify Streaming Data Engineering Pipeline
+# 🎵 Spotify Real-Time Streaming Data Pipeline
 
-A comprehensive end-to-end data engineering project that simulates, processes, and analyzes Spotify streaming events using modern data engineering tools and best practices. This project demonstrates the complete data lifecycle from real-time event generation to business intelligence dashboard.
+[![GitHub last commit](https://img.shields.io/github/last-commit/Konstant-gk/spotify-streaming-pipeline-kafka)](https://github.com/Konstant-gk/spotify-streaming-pipeline-kafka/commits/main)
+[![GitHub stars](https://img.shields.io/github/stars/Konstant-gk/spotify-streaming-pipeline-kafka)](https://github.com/Konstant-gk/spotify-streaming-pipeline-kafka/stargazers)
+[![GitHub license](https://img.shields.io/github/license/Konstant-gk/spotify-streaming-pipeline-kafka)](https://github.com/Konstant-gk/spotify-streaming-pipeline-kafka/blob/main/LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?logo=apache-kafka&logoColor=white)](https://kafka.apache.org/)
+[![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?logo=snowflake&logoColor=white)](https://www.snowflake.com/)
+[![dbt](https://img.shields.io/badge/dbt-FF694B?logo=dbt&logoColor=white)](https://www.getdbt.com/)
+[![Airflow](https://img.shields.io/badge/Airflow-017CEE?logo=apache-airflow&logoColor=white)](https://airflow.apache.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?logo=power-bi&logoColor=black)](https://powerbi.microsoft.com/)
 
-## Project Overview
+---
 
-This project implements a production-ready data pipeline that processes streaming music events through multiple layers of data transformation. The architecture follows the medallion (Bronze-Silver-Gold) data lakehouse pattern, ensuring data quality and enabling scalable analytics.
+## 📑 **TABLE OF CONTENTS**
 
-The pipeline simulates Spotify streaming events, captures them in real-time via Kafka, stores them in object storage, orchestrates data movement with Apache Airflow, transforms data using dbt, and visualizes insights in Power BI. This end-to-end implementation showcases modern data engineering practices including event-driven architecture, containerization, infrastructure as code, and data transformation best practices.
+1. Project Overview
+2. Architecture
+3. Tech Stack
+4. Repository Structure
+5. Pipeline Components
+   - Data Source (Simulator)
+   - Streaming (Kafka)
+   - Storage (MinIO)
+   - Orchestration (Airflow)
+   - Warehouse (Snowflake)
+   - Transformation (dbt)
+   - Visualization (Power BI)
+6. Data Model & Transformations
+   - Bronze Layer (Raw)
+   - Silver Layer (Cleaned)
+   - Gold Layer (Business-ready)
+7. How to run
+8. Dashboard
+9. What I Learned
+10. Acknowledgements
+12. License
 
-## Objectives
+---
 
-The primary objectives of this project were to:
+## 📌 **PROJECT OVERVIEW**
 
-- **Build a Real-Time Data Pipeline**: Create a streaming data pipeline capable of processing events in near real-time using Kafka for event streaming and Python for data generation and consumption.
+This project implements a **real-time, end-to-end data engineering pipeline** for Spotify user event data. It simulates a live streaming scenario where user interactions (plays, skips, adds to playlist) are generated continuously, processed through a modern data stack, and finally visualized in an interactive Power BI dashboard.
 
-- **Implement Medallion Architecture**: Apply the Bronze-Silver-Gold data architecture pattern to ensure proper data quality, transformation, and business-ready analytics layers.
+### **🎯 Key Features**
 
-- **Demonstrate Modern Data Stack**: Integrate industry-standard tools including Kafka, MinIO, Apache Airflow, Snowflake, dbt, and Power BI to showcase proficiency with the modern data engineering ecosystem.
+- **Real-time Data Simulation:** A Python script generates infinite streaming events (1 event per second) instead of using static CSV files.
+- **Streaming Ingestion:** Apache Kafka handles the real-time data stream.
+- **Data Lake Storage:** MinIO (S3-compatible) stores raw event data as JSON files.
+- **Orchestration:** Apache Airflow schedules and manages the pipeline to load data from MinIO to Snowflake.
+- **Cloud Warehouse:** Snowflake serves as the central data warehouse.
+- **In-warehouse Transformation:** dbt (data build tool) is used to transform raw data into clean, business-ready models following the medallion architecture (Bronze → Silver → Gold).
+- **Real-time BI:** Power BI connects directly to Snowflake using the **Direct Query** method, ensuring dashboards update in real-time as new data arrives.
+- **Containerization:** The entire ecosystem (Kafka, MinIO, Airflow) runs locally using Docker containers.
 
-- **Orchestrate Complex Workflows**: Design and implement automated data workflows using Apache Airflow with proper error handling, retries, and scheduling capabilities.
+---
 
-- **Enable Business Intelligence**: Transform raw streaming data into actionable insights through structured transformations and interactive dashboards.
+## 🏛️ **ARCHITECTURE**
 
-- **Apply Best Practices**: Implement code versioning, environment configuration, containerization, and infrastructure as code principles throughout the project.
+The pipeline architecture follows a modern, decoupled design:
 
-## Architecture
-
-The project follows a layered architecture pattern:
-
-1. **Data Generation Layer**: Python-based simulator generates realistic Spotify streaming events with configurable parameters for users, songs, and event types.
-
-2. **Streaming Layer**: Apache Kafka captures events in real-time, providing a distributed messaging system for event streaming with proper partitioning and consumer groups.
-
-3. **Storage Layer**: MinIO (S3-compatible object storage) stores raw events in a partitioned structure (date/hour) for efficient data lake operations.
-
-4. **Orchestration Layer**: Apache Airflow schedules and monitors data pipeline workflows, handling data extraction from MinIO and loading into Snowflake.
-
-5. **Data Warehouse Layer**: Snowflake serves as the cloud data warehouse, storing data in Bronze (raw), Silver (cleaned), and Gold (aggregated) schemas.
-
-6. **Transformation Layer**: dbt (data build tool) performs SQL-based transformations, implementing data quality checks, incremental models, and business logic.
-
-7. **Analytics Layer**: Power BI dashboards provide interactive visualizations for business users to explore streaming analytics.
-
-## Technology Stack
-
-### Data Processing & Streaming
-- **Apache Kafka**: Distributed event streaming platform for real-time data ingestion
-- **Zookeeper**: Coordination service for Kafka cluster management
-- **Kafdrop**: Web UI for Kafka cluster monitoring and topic exploration
-
-### Storage & Data Lake
-- **MinIO**: S3-compatible object storage for data lake implementation
-- **Snowflake**: Cloud data warehouse for structured data storage and analytics
-
-### Orchestration & Workflow
-- **Apache Airflow**: Workflow orchestration platform for scheduling and monitoring data pipelines
-- **PostgreSQL**: Metadata database for Airflow
-
-### Data Transformation
-- **dbt (data build tool)**: SQL-based transformation framework for analytics engineering
-- **dbt-snowflake**: Snowflake adapter for dbt
-- **dbt-utils**: Utility macros for common dbt transformations
-
-### Data Generation & Consumption
-- **Python 3.x**: Core programming language
-- **kafka-python**: Python client for Apache Kafka
-- **boto3**: AWS SDK for Python (used for MinIO S3-compatible API)
-- **Faker**: Library for generating realistic fake data
-- **python-dotenv**: Environment variable management
-
-### Infrastructure & DevOps
-- **Docker**: Containerization platform
-- **Docker Compose**: Multi-container Docker application orchestration
-- **Git**: Version control system
-
-### Visualization
-- **Power BI**: Business intelligence and data visualization platform
+```
+Simulator (Python) → Kafka → Consumer → MinIO (bronze/) → Airflow DAG → Snowflake Bronze
+                                                                              ↓
+                                                              dbt: Bronze → Silver → Gold
+                                                                              ↓
+                                                                      Power BI (Direct Query)
+```
 
 
-## Data Flow
+### **Data Flow Summary**
+1.  **Simulator** generates streaming data.
+2.  **Kafka** ingests the stream.
+3.  **Consumer** batches messages and stores them as JSON files in **MinIO**.
+4.  **Airflow DAG** runs hourly, picks up new JSON files, and loads the raw data into the **Snowflake Bronze** table.
+5.  **dbt** transforms data from Bronze → Silver → Gold layers within Snowflake.
+6.  **Power BI** connects to the Gold layer tables via Direct Query for real-time visualization.
 
-1. **Event Generation**: The Python simulator (`Producer.py`) generates realistic Spotify streaming events (play, pause, skip, add_to_playlist) and publishes them to a Kafka topic.
+---
 
-2. **Event Consumption**: A Kafka consumer (`kafka-to-minio.py`) reads events from Kafka, batches them, and writes to MinIO object storage in a partitioned structure (`bronze/date=YYYY-MM-DD/hour=HH/`).
+## 🛠️ **TECH STACK**
 
-3. **Data Orchestration**: An Apache Airflow DAG runs hourly, extracting all JSON files from MinIO, combining them, and loading the raw data into Snowflake's Bronze schema.
+| Category | Technology | Purpose |
+|----------|------------|---------|
+| **Language** | Python 3.9+ | Data simulation, consumption, orchestration code |
+| **Streaming** | Apache Kafka | Real-time message queue for event streaming |
+| **Containerization** | Docker, Docker Compose | Runs Kafka, Zookeeper, MinIO, Airflow, Postgres |
+| **Data Lake** | MinIO | S3-compatible local storage for raw JSON files |
+| **Workflow Orchestration** | Apache Airflow | Schedules and runs the data load from MinIO to Snowflake |
+| **Cloud Data Warehouse** | Snowflake | Central repository for transformed data |
+| **Data Transformation** | dbt (Data Build Tool) | Version-controlled SQL transformations (Bronze → Silver → Gold) |
+| **Business Intelligence** | Microsoft Power BI | Real-time dashboards and visualizations (using Direct Query) |
+| **Monitoring Tools** | Kafdrop | UI for monitoring Kafka topics and messages |
 
-4. **Data Transformation**: dbt models transform the data through three layers:
-   - **Bronze**: Raw data as ingested from the pipeline
-   - **Silver**: Cleaned and validated data with proper data types and null handling
-   - **Gold**: Aggregated business metrics including top songs and user engagement analytics
+---
 
-5. **Visualization**: Power BI connects to Snowflake's Gold layer to create interactive dashboards for business users.
+## 📂 **REPOSITORY STRUCTURE**
 
-## Key Features
+```
+spotify-streaming-pipeline-kafka/
+├── src/
+│   ├── producers/          # Simulator (Producer.py)
+│   └── consumers/          # Kafka → MinIO consumer
+├── docker containers/
+│   ├── docker-compose.yml  # Kafka, MinIO, Airflow, Zookeeper, Kafdrop
+│   └── dags/               # Airflow DAGs (MinIO → Snowflake)
+├── dbt/
+│   ├── models/             # Silver and Gold dbt models
+│   └── dbt_project.yml
+├── docs/                   # Architecture diagrams
+├── assets/                 # Power BI .pbix
+├── requirements.txt
+└── README.md
+```
 
-### Real-Time Event Streaming
-- Configurable event generation with realistic user behavior simulation
-- Kafka topic partitioning for scalable event processing
-- Consumer groups for parallel processing and fault tolerance
+## 🔄 **PIPELINE COMPONENTS**
 
-### Data Quality & Validation
-- Data type conversions and timestamp parsing in Silver layer
-- Null value filtering and data quality checks
-- Referential integrity through dbt source definitions
+### 1. **Data Source (Simulator)**
+- **File:** `simulator/producer.py`
+- **Function:** Generates realistic Spotify listening events.
+- **Key Features:**
+    - Uses `Faker` and `UUID` to create unique user and event IDs.
+    - Defines a list of 6 songs with corresponding artists.
+    - Event types: `play`, `pause`, `skip`, `add_to_playlist`.
+    - Runs in an infinite `while True` loop with a 1-second delay, creating a continuous real-time stream.
+    - All configurations (Kafka broker, topic) are externalized in a `.env` file.
 
-### Scalable Architecture
-- Containerized infrastructure for easy deployment and scaling
-- Partitioned storage structure for efficient data lake queries
-- Incremental processing capabilities in dbt models
+### 2. **Streaming (Kafka)**
+- **Infrastructure:** Defined in `docker/docker-compose.yml`.
+- **Components:**
+    - **Zookeeper:** Required for Kafka coordination.
+    - **Kafka Broker:** Core streaming service on port `9092`.
+    - **Kafdrop:** UI on port `9000` for monitoring topics and messages.
+- **Topic:** `spotify_events`
 
-### Production-Ready Practices
-- Environment variable management for secure configuration
-- Error handling and retry logic in Airflow tasks
-- Logging and monitoring throughout the pipeline
-- Version-controlled code with proper project structure
+### 3. **Storage (MinIO)**
+- **Infrastructure:** Defined in `docker/docker-compose.yml`.
+- **Access:** UI on port `9001` (username/password set in `.env`).
+- **Bucket:** A bucket named `spotify` is created (either manually or by the consumer script).
+- **Data Organization:**
 
-## Results Summary
+- Files are batched by the consumer (default batch size 10 events) and stored with timestamps to prevent overwrites.
 
-The pipeline successfully processes streaming events end-to-end, demonstrating:
+### 4. **Orchestration (Airflow)**
+- **Infrastructure:** Defined in `docker/docker-compose.yml` (includes Postgres backend, webserver, scheduler).
+- **Access:** UI on port `8080`.
+- **DAG:** `dags/minio_to_snowflake_dag.py`
+- **DAG Tasks:**
+1.  **`extract_from_minio`**: Connects to MinIO using `boto3`, lists objects in the `bronze/` prefix, downloads new JSON files to a temporary local path, and consolidates them.
+2.  **`load_raw_to_snowflake`**: Connects to Snowflake, creates the `bronze` schema and table if they don't exist, and inserts the raw JSON data (event_id, user_id, timestamp, etc. as strings). The DAG is set to run **hourly** with catchup disabled.
 
-- **Real-Time Processing**: Events flow from generation to storage in seconds
-- **Data Quality**: Silver layer ensures clean, validated data with proper types
-- **Business Insights**: Gold layer provides actionable metrics including:
-  - Top songs by play count and skip rate
-  - User engagement metrics by device type, country, and time period
-  - Event type distribution and trends
+### 5. **Warehouse (Snowflake)**
+- **Initial Setup:**
+- Create a database: `CREATE DATABASE SPOTIFY_DB;`
+- Create a schema for raw data: `CREATE SCHEMA SPOTIFY_DB.BRONZE;`
+- Create a schema for dbt transformations: `CREATE SCHEMA SPOTIFY_DB.TRANSFORM;`
+- **Bronze Table Structure:**
+```sql
+CREATE TABLE IF NOT EXISTS SPOTIFY_DB.BRONZE.SPOTIFY_EVENTS (
+    EVENT_ID STRING,
+    USER_ID STRING,
+    SONG_ID STRING,
+    ARTIST_NAME STRING,
+    SONG_NAME STRING,
+    EVENT_TYPE STRING,
+    DEVICE_TYPE STRING,
+    COUNTRY STRING,
+    TIMESTAMP_STR STRING  -- Ingested as string, transformed later
+);
+```
 
-- **Scalability**: Architecture supports horizontal scaling of Kafka consumers and parallel dbt model execution
-- **Reliability**: Airflow orchestration ensures data pipeline reliability with automated scheduling and error recovery
+### 6. Transformation (dbt)
+- Project Root: spotify_dbt/
+- Initialization: dbt init spotify_dbt (configured for Snowflake connection).
+- Source Configuration (models/bronze/source.yml):
+```
+version: 2
+sources:
+  - name: spotify
+    database: SPOTIFY_DB
+    schema: BRONZE
+    tables:
+      - name: spotify_events
+```
+
+- Silver Model (models/silver/spotify_silver.sql):
+- Materialization: View (default).
+- Transformations:
+- Uses a CTE to select from the source.
+- Filters out rows where critical IDs are NULL (a best practice).
+- Casts the string TIMESTAMP_STR to a proper TIMESTAMP data type.
+ 
+```sql
+WITH bronze_data AS (
+    SELECT
+        EVENT_ID,
+        USER_ID,
+        SONG_ID,
+        ARTIST_NAME,
+        SONG_NAME,
+        EVENT_TYPE,
+        DEVICE_TYPE,
+        COUNTRY,
+        TO_TIMESTAMP(TIMESTAMP_STR) AS EVENT_TIMESTAMP
+    FROM {{ source('spotify', 'spotify_events') }}
+    WHERE EVENT_ID IS NOT NULL
+      AND USER_ID IS NOT NULL
+      AND SONG_ID IS NOT NULL
+)
+SELECT * FROM bronze_data
+```
+- Gold Models:
+- models/gold/top_songs.sql (Materialized as View):
+- Aggregates plays and skips per song.
+- Ordered by total plays descending.
+- models/gold/user_engagement.sql (Materialized as View):
+- Aggregates user activity (plays, skips, adds_to_playlist) by USER_ID, DEVICE_TYPE, COUNTRY, and the event DAY.
+- Ordered by total plays descending.
+- Execution: After the Airflow DAG loads data, run dbt run from the spotify_dbt/ directory to build the Silver and Gold views.
+
+### 7. Visualization (Power BI)
+
+Data Source: Connect to SPOTIFY_DB.TRANSFORM schema.
+- Tables Used: TOP_SONGS and USER_ENGAGEMENT.
+  
+Dashboard Features:
+- KPIs: Total Plays, Total Songs, Total Users, Total Artists.
+- Map: Visualizes play count by country.
+- Bar Chart: Top 5 songs by play count.
+- Donut Charts: Distribution of plays by device type and event type.
+- Slicers: To filter data interactively.
+
+## 📊 **DATA MODEL & TRANSFORMATIONS**
+The medallion architecture ensures data quality and clarity at each stage.
+
+### Bronze Layer (Raw)
+
+- Location: Snowflake BRONZE schema.
+- Table: SPOTIFY_EVENTS
+- Description: Raw, unaltered data directly from the JSON files. All columns are stored as STRING to preserve the original payload. This layer serves as a single source of truth and an audit trail.
+
+### Silver Layer (Cleaned)
+
+- Location: Snowflake TRANSFORM schema (created by dbt).
+- View: SPOTIFY_SILVER
+- Transformations Applied:
+- Data Type Casting: TIMESTAMP_STR converted to proper TIMESTAMP data type for time-series analysis.
+- Data Quality Filters: Removed rows where core identifiers (EVENT_ID, USER_ID, SONG_ID) are NULL.
+- Purpose: This view provides a clean, reliable dataset for analysts and serves as the foundation for all downstream business logic.
+
+### Gold Layer (Business-ready)
+
+- Location: Snowflake TRANSFORM schema (created by dbt).
+- Views: TOP_SONGS, USER_ENGAGEMENT
+- Business Logic: Daily user activity roll-up segmented by device and country.
+- Use Case: Understanding user behavior, engagement patterns, and feature adoption across different segments.
+
+## ℹ️**HOW TO RUN**
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Configure environment
+
+Copy `.env.example` to `.env` and set:
+
+- Kafka bootstrap servers
+- MinIO endpoint, access key, secret key
+- Snowflake account, user, password, warehouse, database, schema
+- Kafka topic name
+
+### 3. Start Docker containers
+
+```bash
+cd "docker containers"
+docker-compose up -d
+```
+
+Wait until Airflow reports `airflow db initialized successfully`.
+
+### 4. Create Snowflake database and schemas
+
+```sql
+CREATE DATABASE SPOTIFY_DB;
+USE SPOTIFY_DB;
+CREATE SCHEMA bronze;
+CREATE SCHEMA transform;
+```
+
+### 5. Run consumer first, then producer
+
+**Important:** Start the consumer before the producer so batches are not overwritten (JSON files are named by timestamp).
+
+```bash
+# Terminal 1: Start consumer
+cd src/consumers
+python kafka_to_minio.py
+
+# Terminal 2: Start producer
+cd src/producers
+python producer.py
+```
+
+### 6. Trigger Airflow DAG
+
+In the Airflow UI, enable and trigger the MinIO → Snowflake DAG.
+
+### 7. Run dbt transformations
+
+```bash
+cd dbt
+dbt run
+```
+
+### 8. Connect Power BI
+
+- Get Data → Snowflake
+- Server: your Snowflake account (without `https://`)
+- Warehouse: `COMPUTE_WH`
+- Database: `SPOTIFY_DB`, Schema: `transform`
+- Select Gold tables (`top_songs`, `user_engagement`)
+- Use **Direct Query** for real-time refresh
+
+---
+
+## 💡 WHAT I LEARNED
+- This project was instrumental in solidifying my understanding of a modern, real-time data stack:
+- Real-Time is Different: Working with an infinite data stream (simulated) versus static batches highlighted the need for robust consumer offset management and idempotent processing to avoid data loss or duplication.
+- Containerization is a Game-Changer: Docker Compose made it trivial to spin up a complex, multi-service ecosystem (Kafka, MinIO, Airflow) locally, exactly as it might run in production.
+- Separation of Concerns in Action: The clear delineation between storage (MinIO), compute/warehouse (Snowflake), and transformation (dbt) proved how modular and scalable modern data architectures can be.
+- Direct Query vs. Import: Understanding the trade-off between real-time updates (Direct Query) and dashboard performance (Import) was crucial for delivering the right user experience.
+- End-to-End Ownership: Building a pipeline from the data source simulator all the way to a live dashboard gave me a holistic view of data engineering, reinforcing that the ultimate goal is always to deliver business value.
+
+## 💯ACKNOWLEDGEMENTS
+
+Project based on [Data with Jay] Spotify Data Analysis Pipeline idea
+
+## 📄 LICENSE
+This project is licensed under the MIT License - see the LICENSE file for details.
+
